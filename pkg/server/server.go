@@ -9,7 +9,10 @@ import (
 )
 
 func (s *Server) Run() error {
-	r := buildRouter()
+	r, err := buildRouter()
+	if err != nil {
+		return fmt.Errorf("error building routers: %v", err)
+	}
 
 	s.srv = &http.Server{
 		Addr:         s.Addr,
