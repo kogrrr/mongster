@@ -11,6 +11,6 @@ type Backend struct {
 }
 
 type BackendConfig struct {
-	MongoURI          string        `default:"mongodb://localhost:27017"`
-	ConnectionTimeout time.Duration `default:"2000000000"`
+	MongoConnstr      string
+	ConnectionTimeout time.Duration
 }

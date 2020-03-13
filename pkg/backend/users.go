@@ -3,15 +3,17 @@ package backend
 import (
 	"context"
 	"fmt"
+	"log"
 
-	"github.com/gargath/mongoose/pkg/objects"
+	"github.com/gargath/mongoose/pkg/entities"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func (b *Backend) ListUsers() ([]*objects.User, error) {
-	users := []*objects.User{}
+func (b *Backend) ListUsers() ([]*entities.User, error) {
+	users := []*entities.User{}
 	coll := b.m.Database("test").Collection("Users")
 
 	cur, err := coll.Find(context.TODO(), bson.D{{}}, options.Find())
@@ -20,7 +22,7 @@ func (b *Backend) ListUsers() ([]*objects.User, error) {
 	}
 
 	for cur.Next(context.TODO()) {
-		var u objects.User
+		var u entities.User
 		err := cur.Decode(&u)
 		if err != nil {
 			return users, fmt.Errorf("failed to decode Mongo document for user: %v", err)
@@ -35,4 +37,14 @@ func (b *Backend) ListUsers() ([]*objects.User, error) {
 	cur.Close(context.TODO())
 
 	return users, nil
+}
+
+func (b *Backend) InsertUser(u *entities.User) (string, error) {
+	coll := b.m.Database("test").Collection("Users")
+	insertResult, err := coll.InsertOne(context.TODO(), u)
+	if err != nil {
+		return "", fmt.Errorf("failed to insert user: %v", err)
+	}
+	log.Printf("inserted new user: %+v", insertResult)
+	return insertResult.InsertedID.(primitive.ObjectID).Hex(), nil
 }

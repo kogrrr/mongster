@@ -24,7 +24,7 @@ func (s *Server) Run() error {
 
 	log.Printf("Server listening on %s", s.Addr)
 
-	if err := s.srv.ListenAndServe(); err != nil {
+	if err := s.srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		return fmt.Errorf("failed to start HTTP server: %v", err)
 	}
 	return nil
