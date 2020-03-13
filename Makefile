@@ -2,7 +2,7 @@ include .env
 
 BINARY := mongoose
 VERSION := $(shell git describe --always --dirty --tags 2>/dev/null || echo "undefined")
-ECHO := echo -e
+ECHO := echo
 
 .PHONY: all
 all: test build
@@ -51,7 +51,7 @@ check: fmt lint vet test
 .PHONY: test
 test:
 	@ $(ECHO) "\033[36mRunning test suite in Ginkgo\033[0m"
-	$(GINKGO) -v -p -race -randomizeAllSpecs ./pkg/... ./cmd/... -- -report-dir=$$ARTIFACTS
+	$(GINKGO) -v -p -race -randomizeAllSpecs ./pkg/... ./cmd/...
 	@ $(ECHO)
 
 # Build manager binary
