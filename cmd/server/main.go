@@ -10,16 +10,16 @@ import (
 	flag "github.com/spf13/pflag"
 	"github.com/spf13/viper"
 
-	"github.com/gargath/mongopoc/pkg/server"
+	"github.com/gargath/mongoose/pkg/server"
 )
 
 func main() {
-	log.Printf("Mongo PoC %s\n", version())
+	log.Printf("Mongoose %s\n", version())
 
-	viper.SetEnvPrefix("MONGOPOC")
+	viper.SetEnvPrefix("MONGOOSE")
 	viper.AutomaticEnv()
 
-	flag.String("listenAddr", "0.0.0.0:8080", "address to listen on; overrides MONGOPOC_LISTENADDR")
+	flag.String("listenAddr", "0.0.0.0:8080", "address to listen on; overrides MONGOOSE_LISTENADDR")
 	flag.Bool("help", false, "print this help and exit")
 
 	flag.Parse()
