@@ -5,5 +5,6 @@ import (
 )
 
 type API struct {
-	b *backend.Backend
+	b      *backend.Backend
+	prefix string
 }

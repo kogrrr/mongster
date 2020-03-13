@@ -20,6 +20,7 @@ func main() {
 	viper.AutomaticEnv()
 
 	flag.String("listenAddr", "0.0.0.0:8080", "address to listen on; overrides MONGOOSE_LISTENADDR")
+	flag.String("mongoConnstr", "mongodb://localhost:27017", "MongoDB connection string; overrides MONGOOSE_MONGOCONNSTR")
 	flag.Bool("help", false, "print this help and exit")
 
 	flag.Parse()
