@@ -8,16 +8,17 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-)
 
-type Server struct {
-	GracefulShutdownPeriod time.Duration
-	Addr                   string `default:"0.0.0.0:8080"`
-	srv                    *http.Server
-}
+	"github.com/gargath/mongoose/pkg/auth"
+)
 
 func (s *Server) Run() error {
 	r := mux.NewRouter()
+	sub := r.PathPrefix("/api").Subrouter()
+	sub.Use(auth.TokenVerifierMiddleware)
+
+	r.HandleFunc("/", index)
+	sub.HandleFunc("/", apiIndex)
 
 	s.srv = &http.Server{
 		Addr:         s.Addr,

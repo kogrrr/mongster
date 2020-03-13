@@ -1,6 +1,6 @@
 include .env
 
-BINARY := mongopoc
+BINARY := mongoose
 VERSION := $(shell git describe --always --dirty --tags 2>/dev/null || echo "undefined")
 ECHO := echo -e
 
@@ -56,7 +56,7 @@ test:
 
 # Build manager binary
 $(BINARY): fmt vet
-	GO111MODULE=on CGO_ENABLED=0 $(GO) build -o $(BINARY) -ldflags="-X main.VERSION=${VERSION}" github.com/gargath/mongopoc/cmd/server
+	GO111MODULE=on CGO_ENABLED=0 $(GO) build -o $(BINARY) -ldflags="-X main.VERSION=${VERSION}" github.com/gargath/mongoose/cmd/server
 
 .PHONY: run
 run: generate fmt vet
