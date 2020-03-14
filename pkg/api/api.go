@@ -11,10 +11,9 @@ import (
 	"github.com/spf13/viper"
 )
 
-func NewAPI() (*API, error) {
-	api := &API{
-		prefix: "/api",
-	}
+func NewFromConfig(c *Config) (*API, error) {
+	api := &API{}
+	api.prefix = c.Prefix
 	config := &backend.BackendConfig{
 		MongoConnstr:      viper.GetString("mongoConnstr"),
 		ConnectionTimeout: 5 * time.Second,
@@ -25,6 +24,13 @@ func NewAPI() (*API, error) {
 	}
 	api.b = backend
 	return api, nil
+}
+
+func NewAPI() (*API, error) {
+	config := &Config{
+		Prefix: "/api",
+	}
+	return NewFromConfig(config)
 }
 
 func AddRoutes(router *mux.Router) error {
