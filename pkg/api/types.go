@@ -8,3 +8,7 @@ type API struct {
 	b      *backend.Backend
 	prefix string
 }
+
+type Config struct {
+	Prefix string
+}
