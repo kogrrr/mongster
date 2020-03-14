@@ -21,6 +21,8 @@ func main() {
 
 	flag.String("listenAddr", "0.0.0.0:8080", "address to listen on; overrides MONGOOSE_LISTENADDR")
 	flag.String("mongoConnstr", "mongodb://localhost:27017", "MongoDB connection string; overrides MONGOOSE_MONGOCONNSTR")
+	flag.String("clientId", "", "Google OAuth Client Id; overrides MONGOOSE_CLIENTID")
+	flag.String("clientSecret", "", "Google OAuth Client Secret; overrides MONGOOSE_CLIENTSECRET")
 	flag.Bool("help", false, "print this help and exit")
 
 	flag.Parse()
