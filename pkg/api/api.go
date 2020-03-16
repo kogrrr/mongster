@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func NewFromConfig(c *Config) (*API, error) {
+func newFromConfig(c *Config) (*API, error) {
 	api := &API{}
 	api.prefix = c.Prefix
 	config := &backend.BackendConfig{
@@ -20,21 +20,21 @@ func NewFromConfig(c *Config) (*API, error) {
 	}
 	backend, err := backend.NewBackend(config)
 	if err != nil {
-		return nil, fmt.Errorf("failed to initialize backend: %v", err)
+		return nil, fmt.Errorf("failed to initialize api backend: %v", err)
 	}
 	api.b = backend
 	return api, nil
 }
 
-func NewAPI() (*API, error) {
+func newAPI() (*API, error) {
 	config := &Config{
 		Prefix: "/api",
 	}
-	return NewFromConfig(config)
+	return newFromConfig(config)
 }
 
 func AddRoutes(router *mux.Router) error {
-	a, err := NewAPI()
+	a, err := newAPI()
 	if err != nil {
 		return fmt.Errorf("error while creating API: %v", err)
 	}
