@@ -3,8 +3,8 @@
 package main
 
 import (
-	"log"
 	"github.com/shurcooL/vfsgen"
+	"log"
 
 	"github.com/gargath/mongoose/pkg/static"
 )
