@@ -1,4 +1,5 @@
 .env
 mongoose
+mongoose.dev
 
 **/**vfsdata.go

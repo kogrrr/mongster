@@ -55,7 +55,7 @@ check: fmt lint vet test
 
 .PHONY: generate
 generate:
-	$(GO) generate ./pkg/...
+	GO111MODULE=on $(GO) generate ./pkg/...
 
 .PHONY: test
 test:
@@ -67,8 +67,8 @@ test:
 $(BINARY): fmt vet
 	GO111MODULE=on CGO_ENABLED=0 $(GO) build -o $(BINARY) -ldflags="-X main.VERSION=${VERSION}" github.com/gargath/mongoose/cmd/server
 
-$(BINARY).dev:
-        GO111MODULE=on CGO_ENABLED=0 $(GO) build -o $(BINARY).dev -tags dev github.com/gargath/mongoose/cmd/server
+$(BINARY).dev: clean
+	GO111MODULE=on CGO_ENABLED=0 $(GO) build -tags dev -o $(BINARY).dev github.com/gargath/mongoose/cmd/server
 
 .PHONY: run
 run: generate fmt vet

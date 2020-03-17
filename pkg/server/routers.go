@@ -2,11 +2,13 @@ package server
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/gorilla/mux"
 
 	"github.com/gargath/mongoose/pkg/api"
 	"github.com/gargath/mongoose/pkg/auth"
+	"github.com/gargath/mongoose/pkg/static"
 )
 
 func buildRouter() (*mux.Router, error) {
@@ -20,7 +22,9 @@ func buildRouter() (*mux.Router, error) {
 		return nil, fmt.Errorf("error adding auth routes: %v", err)
 	}
 
-	router.HandleFunc("/", index)
+	router.Handle("/{rest}", http.StripPrefix("/", http.FileServer(static.Assets)))
+
+	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(static.Assets)))
 
 	return router, nil
 }
