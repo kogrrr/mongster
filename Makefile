@@ -4,11 +4,13 @@ BINARY := mongoose
 VERSION := $(shell git describe --always --dirty --tags 2>/dev/null || echo "undefined")
 ECHO := echo
 
+.NOTPARALLEL:
+
 .PHONY: all
 all: test build
 
 .PHONY: build
-build: clean generate $(BINARY)
+build: clean frontend pkg/static/assets_vfsdata.go $(BINARY)
 
 .PHONY: dev
 dev: clean $(BINARY).dev
@@ -18,6 +20,13 @@ clean:
 	rm -f $(BINARY)
 	rm -f $(BINARY).dev
 	find . -name \*vfsdata.go -exec rm -f {} \;
+	make -C frontend clean
+
+.PHONY: frontend
+frontend: frontend/dist
+
+frontend/dist:
+	make -C frontend build
 
 .PHONY: distclean
 distclean: clean
@@ -31,7 +40,7 @@ fmt:
 # Run go vet against code
 .PHONY: vet
 vet:
-	$(GO) vet ./pkg/... ./cmd/...
+	$(GO) vet -composites=false ./pkg/... ./cmd/...
 
 .PHONY: lint
 lint:
@@ -53,8 +62,10 @@ lint:
 .PHONY: check
 check: fmt lint vet test
 
-.PHONY: generate
-generate:
+.PHONY: generate frontend
+generate: pkg/static/assets_vfsdata.go
+
+pkg/static/assets_vfsdata.go:
 	GO111MODULE=on $(GO) generate ./pkg/...
 
 .PHONY: test
@@ -64,12 +75,12 @@ test:
 	@ $(ECHO)
 
 # Build manager binary
-$(BINARY): fmt vet
+$(BINARY): fmt vet frontend
 	GO111MODULE=on CGO_ENABLED=0 $(GO) build -o $(BINARY) -ldflags="-X main.VERSION=${VERSION}" github.com/gargath/mongoose/cmd/server
 
-$(BINARY).dev: clean
+$(BINARY).dev: clean frontend
 	GO111MODULE=on CGO_ENABLED=0 $(GO) build -tags dev -o $(BINARY).dev github.com/gargath/mongoose/cmd/server
 
 .PHONY: run
-run: generate fmt vet
+run: fmt vet frontend
 	$(GO) run ./cmd/main.go

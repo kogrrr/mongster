@@ -7,11 +7,15 @@ import (
 	"github.com/gargath/mongoose/pkg/backend"
 )
 
-type auth struct {
+type Auth struct {
 	b            *backend.Backend
 	oAuthConfig  *oauth2.Config
 	sessionStore *sessions.CookieStore
 	sessionName  string
+}
+
+type Config struct {
+	SessionName string
 }
 
 type Userinfo struct {

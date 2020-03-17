@@ -11,13 +11,12 @@ import (
 
 var _ = Describe("Auth Endpoint", func() {
 	It("adds required routes", func() {
-		a := &auth{}
+		a := &Auth{}
 		router := mux.NewRouter()
-		a.addRoutes(router)
+		a.AddRoutes(router)
 
 		var login *mux.Route
 		var callback *mux.Route
-		var picture *mux.Route
 
 		router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 			tmpl, err := route.GetPathTemplate()
@@ -29,15 +28,11 @@ var _ = Describe("Auth Endpoint", func() {
 			case "/auth/callback":
 				fmt.Println("found callback")
 				callback = route
-			case "/auth/icon":
-				fmt.Println("found picture")
-				picture = route
 			}
 			return nil
 		})
 
 		Expect(login).NotTo(BeNil())
 		Expect(callback).NotTo(BeNil())
-		Expect(picture).NotTo(BeNil())
 	})
 })

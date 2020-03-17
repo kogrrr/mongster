@@ -4,7 +4,6 @@ import (
 	"crypto/rand"
 	"fmt"
 	"io"
-	"time"
 
 	"github.com/gargath/mongoose/pkg/backend"
 	"github.com/gorilla/mux"
@@ -15,7 +14,7 @@ import (
 )
 
 //TODO: Ensure only one backend is shared between auth and api
-func newAuth() (*auth, error) {
+func NewAuth(c *Config, store *sessions.CookieStore, backend *backend.Backend) (*Auth, error) {
 	// Ensure crypto-safe PRNG is available
 	buf := make([]byte, 1)
 
@@ -24,14 +23,13 @@ func newAuth() (*auth, error) {
 		panic(fmt.Sprintf("crypto/rand is unavailable: Read() failed with %#v", err))
 	}
 
-	key, err := randomHexBytes(128)
 	if err != nil {
 		panic(fmt.Sprintf("Error generating session key. randomHex() failed with %#v", err))
 	}
 
-	a := &auth{}
+	a := &Auth{}
 
-	a.sessionName = "mongoose-session"
+	a.sessionName = c.SessionName
 
 	clientId := viper.GetString("clientId")
 	clientSecret := viper.GetString("clientSecret")
@@ -50,31 +48,15 @@ func newAuth() (*auth, error) {
 		Endpoint: google.Endpoint,
 	}
 
-	a.sessionStore = sessions.NewCookieStore([]byte(key))
+	a.sessionStore = store
 
-	config := &backend.BackendConfig{
-		MongoConnstr:      viper.GetString("mongoConnstr"),
-		ConnectionTimeout: 5 * time.Second,
-	}
-	backend, err := backend.NewBackend(config)
-	if err != nil {
-		return a, fmt.Errorf("failed to initialize auth backend: %v", err)
-	}
 	a.b = backend
 	return a, nil
 }
 
-func AddRoutes(router *mux.Router) error {
-	a, err := newAuth()
-	if err != nil {
-		return fmt.Errorf("Failed to initialize auth subsystem: %v", err)
-	}
-	a.addRoutes(router)
-	return nil
-}
-
-func (a *auth) addRoutes(router *mux.Router) {
+func (a *Auth) AddRoutes(router *mux.Router) {
 	authRouter := router.PathPrefix("/auth").Subrouter()
 	authRouter.HandleFunc("/login", a.LoginHandler)
 	authRouter.HandleFunc("/callback", a.CallbackHandler)
+	authRouter.HandleFunc("/self", a.SelfHandler)
 }
