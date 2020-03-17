@@ -8,11 +8,16 @@ ECHO := echo
 all: test build
 
 .PHONY: build
-build: clean $(BINARY)
+build: clean generate $(BINARY)
+
+.PHONY: dev
+dev: clean $(BINARY).dev
 
 .PHONY: clean
 clean:
 	rm -f $(BINARY)
+	rm -f $(BINARY).dev
+	find . -name \*vfsdata.go -exec rm -f {} \;
 
 .PHONY: distclean
 distclean: clean
@@ -48,6 +53,10 @@ lint:
 .PHONY: check
 check: fmt lint vet test
 
+.PHONY: generate
+generate:
+	$(GO) generate ./pkg/...
+
 .PHONY: test
 test:
 	@ $(ECHO) "\033[36mRunning test suite in Ginkgo\033[0m"
@@ -57,6 +66,9 @@ test:
 # Build manager binary
 $(BINARY): fmt vet
 	GO111MODULE=on CGO_ENABLED=0 $(GO) build -o $(BINARY) -ldflags="-X main.VERSION=${VERSION}" github.com/gargath/mongoose/cmd/server
+
+$(BINARY).dev:
+        GO111MODULE=on CGO_ENABLED=0 $(GO) build -o $(BINARY).dev -tags dev github.com/gargath/mongoose/cmd/server
 
 .PHONY: run
 run: generate fmt vet
