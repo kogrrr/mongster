@@ -8,10 +8,10 @@ import (
 var _ = Describe("Auth Util", func() {
 
 	It("generates strings", func() {
-		a, err1 := randomHexBytes(1)
-		b, err20 := randomHexBytes(20)
-		c, err50 := randomHexBytes(50)
-		d, err128 := randomHexBytes(128)
+		a, err1 := RandomHexBytes(1)
+		b, err20 := RandomHexBytes(20)
+		c, err50 := RandomHexBytes(50)
+		d, err128 := RandomHexBytes(128)
 		Expect(err1).NotTo(HaveOccurred())
 		Expect(err20).NotTo(HaveOccurred())
 		Expect(err50).NotTo(HaveOccurred())
@@ -23,10 +23,10 @@ var _ = Describe("Auth Util", func() {
 	})
 
 	It("generates strings that are random", func() {
-		a, erra := randomHexBytes(128)
-		b, errb := randomHexBytes(128)
-		c, errc := randomHexBytes(128)
-		d, errd := randomHexBytes(128)
+		a, erra := RandomHexBytes(128)
+		b, errb := RandomHexBytes(128)
+		c, errc := RandomHexBytes(128)
+		d, errd := RandomHexBytes(128)
 		Expect(erra).NotTo(HaveOccurred())
 		Expect(errb).NotTo(HaveOccurred())
 		Expect(errc).NotTo(HaveOccurred())

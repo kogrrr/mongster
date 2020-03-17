@@ -4,15 +4,18 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/gargath/mongoose/pkg/entities"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func (b *Backend) ListUsers() ([]*entities.User, error) {
+	//TODO: MUST(!) filter token before returning
 	users := []*entities.User{}
 	coll := b.m.Database("test").Collection("Users")
 
@@ -47,4 +50,42 @@ func (b *Backend) InsertUser(u *entities.User) (string, error) {
 	}
 	log.Printf("inserted new user: %+v", insertResult)
 	return insertResult.InsertedID.(primitive.ObjectID).Hex(), nil
+}
+
+func (b *Backend) FindUserBySub(sub string) (*entities.User, error) {
+	var user *entities.User
+	coll := b.m.Database("test").Collection("Users")
+
+	filter := bson.M{"sub": sub}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	u := coll.FindOne(ctx, filter)
+	if u.Err() != nil {
+		if u.Err() == mongo.ErrNoDocuments {
+			return user, nil
+		} else {
+			return user, fmt.Errorf("failed to fetch user with sub %v: %v", sub, u.Err())
+		}
+	}
+	u.Decode(&user)
+	return user, nil
+}
+
+func (b *Backend) UpdateUserToken(sub string, t *entities.Token) error {
+	coll := b.m.Database("test").Collection("Users")
+
+	opts := options.Update().SetUpsert(false)
+	filter := bson.M{"sub": sub}
+	update := bson.D{{"$set", bson.D{{"token", t}}}}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	result, err := coll.UpdateOne(ctx, filter, update, opts)
+	if err != nil {
+		return err
+	}
+	if result.MatchedCount == 0 {
+		return fmt.Errorf("token update did not match existing user")
+	}
+	return nil
 }

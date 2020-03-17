@@ -9,18 +9,19 @@ import (
 )
 
 func (s *Server) Run() error {
-	r, err := buildRouter()
-	if err != nil {
-		return fmt.Errorf("error building routers: %v", err)
-	}
-
 	s.srv = &http.Server{
 		Addr:         s.Addr,
 		WriteTimeout: time.Second * 15,
 		ReadTimeout:  time.Second * 15,
 		IdleTimeout:  time.Second * 60,
-		Handler:      r,
 	}
+
+	r, err := buildRouter()
+	if err != nil {
+		return fmt.Errorf("error building routers: %v", err)
+	}
+
+	s.srv.Handler = r
 
 	log.Printf("Server listening on %s", s.Addr)
 

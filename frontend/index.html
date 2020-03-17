@@ -3,8 +3,21 @@
 	<head>
 		<title>Mongoose</title>
 
+		<link rel="icon" href="favicon.ico" type="image/png" sizes="16x16 32x32">
+
 		<link rel="stylesheet" type="text/css" href="/style/main.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+		<script type="text/javascript">
+				fetch('/auth/self')
+		  .then((response) => {
+				console.log(response.status);
+		    return response.json();
+		  })
+		  .then((data) => {
+		    console.log(data);
+		  });
+		</script>
 
 	</head>
 	<body>
