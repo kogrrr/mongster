@@ -7,7 +7,11 @@ build: dist
 clean:
 	rm -rf dist
 
-dist:
+.PHONY: deps
+deps:
+	$(NPM) ci
+
+dist: deps
 	$(PARCEL) build index.html
 
 dev:
