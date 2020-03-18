@@ -1,6 +1,6 @@
 package static
 
-//go:generate go run -tags=dev assets_generate.go
+//go:generate go run -tags=package assets_generate.go
 
 func test() {
 }

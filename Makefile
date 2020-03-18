@@ -12,9 +12,6 @@ all: test build
 .PHONY: build
 build: clean frontend pkg/static/assets_vfsdata.go $(BINARY)
 
-.PHONY: dev
-dev: clean $(BINARY).dev
-
 .PHONY: clean
 clean:
 	rm -f $(BINARY)
@@ -40,7 +37,7 @@ fmt:
 # Run go vet against code
 .PHONY: vet
 vet:
-	$(GO) vet -composites=false ./pkg/... ./cmd/...
+	$(GO) vet -tags dev -composites=false ./pkg/... ./cmd/...
 
 .PHONY: lint
 lint:
@@ -62,10 +59,10 @@ lint:
 .PHONY: check
 check: fmt lint vet test
 
-.PHONY: generate frontend
+.PHONY: generate 
 generate: pkg/static/assets_vfsdata.go
 
-pkg/static/assets_vfsdata.go:
+pkg/static/assets_vfsdata.go: frontend/dist
 	GO111MODULE=on $(GO) generate ./pkg/...
 
 .PHONY: test
@@ -78,9 +75,6 @@ test:
 $(BINARY): fmt vet frontend
 	GO111MODULE=on CGO_ENABLED=0 $(GO) build -o $(BINARY) -ldflags="-X main.VERSION=${VERSION}" github.com/gargath/mongoose/cmd/server
 
-$(BINARY).dev: clean frontend
-	GO111MODULE=on CGO_ENABLED=0 $(GO) build -tags dev -o $(BINARY).dev github.com/gargath/mongoose/cmd/server
-
-.PHONY: run
-run: fmt vet frontend
-	$(GO) run ./cmd/main.go
+.PHONY: dev
+dev: clean fmt vet
+	GO111MODULE=on $(GO) run -tags dev github.com/gargath/mongoose/cmd/server
