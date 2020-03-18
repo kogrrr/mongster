@@ -111,11 +111,18 @@ func (a *Auth) CallbackHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/index.html", http.StatusTemporaryRedirect)
 }
 
+func (auth *Auth) LogoutHandler(w http.ResponseWriter, r *http.Request) {
+	session, _ := auth.sessionStore.Get(r, auth.sessionName)
+	session.Options.MaxAge = -1
+	session.Save(r, w)
+	http.Redirect(w, r, "/index.html", http.StatusTemporaryRedirect)
+}
+
 func (auth *Auth) SelfHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := auth.sessionStore.Get(r, auth.sessionName)
 	sub, ok := session.Values["sub"].(string)
 	if !ok {
-		w.WriteHeader(http.StatusNotFound)
+		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("{}"))
 		return
 	}
