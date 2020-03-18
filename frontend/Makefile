@@ -9,3 +9,6 @@ clean:
 
 dist:
 	$(PARCEL) build index.html
+
+dev:
+	$(PARCEL) watch index.html

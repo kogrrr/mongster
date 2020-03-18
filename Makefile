@@ -15,7 +15,6 @@ build: clean frontend pkg/static/assets_vfsdata.go $(BINARY)
 .PHONY: clean
 clean:
 	rm -f $(BINARY)
-	rm -f $(BINARY).dev
 	find . -name \*vfsdata.go -exec rm -f {} \;
 	make -C frontend clean
 
@@ -76,5 +75,6 @@ $(BINARY): fmt vet frontend
 	GO111MODULE=on CGO_ENABLED=0 $(GO) build -o $(BINARY) -ldflags="-X main.VERSION=${VERSION}" github.com/gargath/mongoose/cmd/server
 
 .PHONY: dev
-dev: clean fmt vet
+dev: clean
+	make -C frontend dev &
 	GO111MODULE=on $(GO) run -tags dev github.com/gargath/mongoose/cmd/server
