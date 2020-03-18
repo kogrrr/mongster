@@ -8,5 +8,14 @@
     "bootstrap": "^4.4.1",
     "jquery": "^3.4.1",
     "popper.js": "^1.16.1"
-  }
+  },
+  "name": "mongster-frontend",
+  "version": "1.0.0",
+  "description": "mongster frontend",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gargath",
+  "license": "ISC"
 }

@@ -57,6 +57,7 @@ func NewAuth(c *Config, store *sessions.CookieStore, backend *backend.Backend) (
 func (a *Auth) AddRoutes(router *mux.Router) {
 	authRouter := router.PathPrefix("/auth").Subrouter()
 	authRouter.HandleFunc("/login", a.LoginHandler)
+	authRouter.HandleFunc("/logout", a.LogoutHandler)
 	authRouter.HandleFunc("/callback", a.CallbackHandler)
 	authRouter.HandleFunc("/self", a.SelfHandler)
 }
