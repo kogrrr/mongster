@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/gargath/mongoose/pkg/backend"
+	"github.com/gargath/mongster/pkg/backend"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/spf13/viper"

@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gargath/mongoose/pkg/entities"
+	"github.com/gargath/mongster/pkg/entities"
 	"golang.org/x/oauth2"
 )
 

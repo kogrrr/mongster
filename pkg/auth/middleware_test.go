@@ -7,7 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/gargath/mongoose/pkg/auth"
+	"github.com/gargath/mongster/pkg/auth"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

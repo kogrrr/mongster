@@ -10,19 +10,19 @@ import (
 	flag "github.com/spf13/pflag"
 	"github.com/spf13/viper"
 
-	"github.com/gargath/mongoose/pkg/server"
+	"github.com/gargath/mongster/pkg/server"
 )
 
 func main() {
-	log.Printf("Mongoose %s\n", version())
+	log.Printf("Mongster %s\n", version())
 
-	viper.SetEnvPrefix("MONGOOSE")
+	viper.SetEnvPrefix("MONGSTER")
 	viper.AutomaticEnv()
 
-	flag.String("listenAddr", "0.0.0.0:8080", "address to listen on; overrides MONGOOSE_LISTENADDR")
-	flag.String("mongoConnstr", "mongodb://localhost:27017", "MongoDB connection string; overrides MONGOOSE_MONGOCONNSTR")
-	flag.String("clientId", "", "Google OAuth Client Id; overrides MONGOOSE_CLIENTID")
-	flag.String("clientSecret", "", "Google OAuth Client Secret; overrides MONGOOSE_CLIENTSECRET")
+	flag.String("listenAddr", "0.0.0.0:8080", "address to listen on; overrides MONGSTER_LISTENADDR")
+	flag.String("mongoConnstr", "mongodb://localhost:27017", "MongoDB connection string; overrides MONGSTER_MONGOCONNSTR")
+	flag.String("clientId", "", "Google OAuth Client Id; overrides MONGSTER_CLIENTID")
+	flag.String("clientSecret", "", "Google OAuth Client Secret; overrides MONGSTER_CLIENTSECRET")
 	flag.Bool("help", false, "print this help and exit")
 
 	flag.Parse()

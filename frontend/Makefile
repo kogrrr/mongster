@@ -7,6 +7,10 @@ build: dist
 clean:
 	rm -rf dist
 
+.PHONY: distclean
+distclean: clean
+	rm -rf node_modules
+
 .PHONY: deps
 deps:
 	$(NPM) ci

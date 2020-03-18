@@ -4,8 +4,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 
-	"github.com/gargath/mongoose/pkg/auth"
-	"github.com/gargath/mongoose/pkg/backend"
+	"github.com/gargath/mongster/pkg/auth"
+	"github.com/gargath/mongster/pkg/backend"
 )
 
 func NewFromConfig(c *Config, s *sessions.CookieStore, b *backend.Backend) (*API, error) {

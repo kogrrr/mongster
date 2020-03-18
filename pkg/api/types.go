@@ -3,7 +3,7 @@ package api
 import (
 	"github.com/gorilla/sessions"
 
-	"github.com/gargath/mongoose/pkg/backend"
+	"github.com/gargath/mongster/pkg/backend"
 )
 
 type API struct {
