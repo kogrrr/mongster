@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/gargath/mongoose/pkg/entities"
+	"github.com/gargath/mongster/pkg/entities"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"

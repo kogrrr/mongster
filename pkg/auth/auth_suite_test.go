@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestMongoose(t *testing.T) {
+func TestMongster(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Mongoose Auth Suite")
+	RunSpecs(t, "Mongster Auth Suite")
 }

@@ -9,10 +9,10 @@ import (
 	"github.com/gorilla/sessions"
 	"github.com/spf13/viper"
 
-	"github.com/gargath/mongoose/pkg/api"
-	"github.com/gargath/mongoose/pkg/auth"
-	"github.com/gargath/mongoose/pkg/backend"
-	"github.com/gargath/mongoose/pkg/static"
+	"github.com/gargath/mongster/pkg/api"
+	"github.com/gargath/mongster/pkg/auth"
+	"github.com/gargath/mongster/pkg/backend"
+	"github.com/gargath/mongster/pkg/static"
 )
 
 func buildRouter() (*mux.Router, error) {
@@ -35,7 +35,7 @@ func buildRouter() (*mux.Router, error) {
 
 	ac := &api.Config{
 		Prefix:      "/api",
-		SessionName: "mongoose-session",
+		SessionName: "mongster-session",
 	}
 	api, err := api.NewFromConfig(ac, s, b)
 	if err != nil {
@@ -43,7 +43,7 @@ func buildRouter() (*mux.Router, error) {
 	}
 
 	auc := &auth.Config{
-		SessionName: "mongoose-session",
+		SessionName: "mongster-session",
 	}
 	auth, err := auth.NewAuth(auc, s, b)
 	if err != nil {

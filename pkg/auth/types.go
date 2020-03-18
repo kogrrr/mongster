@@ -4,7 +4,7 @@ import (
 	"github.com/gorilla/sessions"
 	"golang.org/x/oauth2"
 
-	"github.com/gargath/mongoose/pkg/backend"
+	"github.com/gargath/mongster/pkg/backend"
 )
 
 type Auth struct {

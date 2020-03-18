@@ -6,7 +6,7 @@ import (
 	"github.com/shurcooL/vfsgen"
 	"log"
 
-	"github.com/gargath/mongoose/pkg/static"
+	"github.com/gargath/mongster/pkg/static"
 )
 
 func main() {

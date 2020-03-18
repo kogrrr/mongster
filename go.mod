@@ -1,4 +1,4 @@
-module github.com/gargath/mongoose
+module github.com/gargath/mongster
 
 go 1.14
 

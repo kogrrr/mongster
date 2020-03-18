@@ -1,6 +1,6 @@
 include .env
 
-BINARY := mongoose
+BINARY := mongster
 VERSION := $(shell git describe --always --dirty --tags 2>/dev/null || echo "undefined")
 ECHO := echo
 
@@ -27,6 +27,7 @@ frontend/dist:
 .PHONY: distclean
 distclean: clean
 	rm -rf release
+	make -C frontend distclean
 
 # Run go fmt against code
 .PHONY: fmt
@@ -58,7 +59,7 @@ lint:
 .PHONY: check
 check: fmt lint vet test
 
-.PHONY: generate 
+.PHONY: generate
 generate: pkg/static/assets_vfsdata.go
 
 pkg/static/assets_vfsdata.go: frontend/dist
@@ -72,9 +73,9 @@ test:
 
 # Build manager binary
 $(BINARY): fmt vet frontend
-	GO111MODULE=on CGO_ENABLED=0 $(GO) build -o $(BINARY) -ldflags="-X main.VERSION=${VERSION}" github.com/gargath/mongoose/cmd/server
+	GO111MODULE=on CGO_ENABLED=0 $(GO) build -o $(BINARY) -ldflags="-X main.VERSION=${VERSION}" github.com/gargath/mongster/cmd/server
 
 .PHONY: dev
 dev: clean
 	make -C frontend dev &
-	GO111MODULE=on $(GO) run -tags dev github.com/gargath/mongoose/cmd/server
+	GO111MODULE=on $(GO) run -tags dev github.com/gargath/mongster/cmd/server
