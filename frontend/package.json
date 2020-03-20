@@ -1,21 +1,26 @@
 {
-  "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.12.1",
-    "cssnano": "^4.1.10",
-    "parcel-bundler": "^1.12.4"
-  },
-  "dependencies": {
-    "bootstrap": "^4.4.1",
-    "jquery": "^3.4.1",
-    "popper.js": "^1.16.1"
-  },
-  "name": "mongster-frontend",
+  "name": "vuesample",
   "version": "1.0.0",
-  "description": "mongster frontend",
-  "main": "index.html",
+  "description": "",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Gargath",
-  "license": "ISC"
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.4.1",
+    "bootstrap-vue": "^2.7.0",
+    "cssnano": "^4.1.10",
+    "jquery": "^3.4.1",
+    "vue": "^2.6.11",
+    "vue-hot-reload-api": "^2.3.4"
+  },
+  "alias": {
+    "vue": "./node_modules/vue/dist/vue.common.js"
+  },
+  "devDependencies": {
+    "@vue/component-compiler-utils": "^3.1.1",
+    "vue-template-compiler": "^2.6.11"
+  }
 }
