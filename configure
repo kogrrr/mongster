@@ -78,7 +78,24 @@ check_go_version() {
       ;;
     2)
       printf "${RED}"
-      echo "$GO_VERSION < 1.10"
+      echo "$GO_VERSION < 1.12"
+      exit 1
+      ;;
+  esac
+
+  echo -n "Checking ginkgo version... "
+  GINKGO_VERSION=$(${tools[ginkgo]} version | ${tools[awk]} '{print $3}')
+  vercomp $GINKGO_VERSION 1.10
+  case $? in
+    0) ;&
+    1)
+      printf "${GREEN}"
+      echo $GINKGO_VERSION
+      printf "${NC}"
+      ;;
+    2)
+      printf "${RED}"
+      echo "$GINKGO_VERSION < 1.10"
       exit 1
       ;;
   esac
@@ -107,7 +124,13 @@ check_go_env() {
     printf "${RED}invalid${NC} - GOPATH not set\n"
     exit 1
   fi
-  printf "${GREEN}valid${NC} - $GOPATH\n"
+  if [[ "$(pwd)" =~ .*"$GOPATH".* ]]; then
+    echo $(pwd)
+    echo $GOPATH
+    printf "${GREEN}valid${NC} - $GOPATH\n"
+  else
+    printf "${RED}invalid${NC} - cwd not underneath GOPATH\n"
+  fi
 }
 
 cd ${0%/*}
