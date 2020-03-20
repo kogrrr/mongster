@@ -1,5 +1,7 @@
 package api
 
+//go:generate go run user_generate.go
+
 import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"

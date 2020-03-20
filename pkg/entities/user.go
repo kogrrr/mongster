@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// +generate:mandatory=Name
 type User struct {
 	Sub        string `json:"sub" bson:"sub"`
 	Name       string `json:"name" bson:"name"`

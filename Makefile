@@ -16,6 +16,7 @@ build: clean frontend pkg/static/assets_vfsdata.go $(BINARY)
 clean:
 	rm -f $(BINARY)
 	find . -name \*vfsdata.go -exec rm -f {} \;
+	find . -name \*_generated.go -exec rm -f {} \;
 	make -C frontend clean
 
 .PHONY: frontend
