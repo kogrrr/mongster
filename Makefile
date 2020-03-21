@@ -15,9 +15,8 @@ build: clean frontend pkg/static/assets_vfsdata.go $(BINARY)
 .PHONY: clean
 clean:
 	rm -f $(BINARY)
-	find . -name \*vfsdata.go -exec rm -f {} \;
-	find . -name \*_generated.go -exec rm -f {} \;
 	make -C frontend clean
+	make -C pkg clean
 
 .PHONY: frontend
 frontend: frontend/dist
@@ -61,10 +60,8 @@ lint:
 check: fmt lint vet test
 
 .PHONY: generate
-generate: pkg/static/assets_vfsdata.go
-
-pkg/static/assets_vfsdata.go: frontend/dist
-	GO111MODULE=on $(GO) generate ./pkg/...
+generate:
+	make -C pkg generate
 
 .PHONY: test
 test:
@@ -78,5 +75,6 @@ $(BINARY): fmt vet frontend
 
 .PHONY: dev
 dev: clean
+	make -C pkg dev
 	make -C frontend dev &
 	GO111MODULE=on $(GO) run -tags dev github.com/gargath/mongster/cmd/server

@@ -11,7 +11,7 @@
       <img id="user_icon" width="35" class="rounded-circle" alt="user icon" v-bind:src="icon">
     </template>
     <div class="userinfo-header">User Info:</div>
-    <b-dropdown-item><em>{{ username }}</em></b-dropdown-item>
+    <b-dropdown-item to="/profile"><em>{{ username }}</em></b-dropdown-item>
     <b-dropdown-item href="/auth/logout">Sign Out</b-dropdown-item>
   </b-nav-item-dropdown>
 </template>
