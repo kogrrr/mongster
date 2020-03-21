@@ -44,6 +44,7 @@ func buildRouter() (*mux.Router, error) {
 
 	auc := &auth.Config{
 		SessionName: "mongster-session",
+		Secret:      []byte(key),
 	}
 	auth, err := auth.NewAuth(auc, s, b)
 	if err != nil {

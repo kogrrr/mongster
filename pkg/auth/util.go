@@ -6,7 +6,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
+	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/gargath/mongster/pkg/entities"
 	"github.com/gorilla/sessions"
 	"golang.org/x/oauth2"
 )
@@ -54,4 +57,49 @@ func RandomHexBytes(n int) (string, error) {
 		return "", err
 	}
 	return hex.EncodeToString(bytes), nil
+}
+
+func (a *Auth) generateToken(info *Userinfo, roles []entities.Role) (string, error) {
+	claims := MongsterClaims{
+		Roles: roles,
+		User:  info,
+		StandardClaims: jwt.StandardClaims{
+			Audience:  "mongster",
+			Issuer:    "mongster",
+			IssuedAt:  time.Now().Unix(),
+			NotBefore: time.Now().Unix(),
+			ExpiresAt: (time.Now().Add(1 * time.Hour)).Unix(),
+			Subject:   info.Email,
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	ss, err := token.SignedString(a.secret)
+	return ss, err
+}
+
+func UserinfoFromClaims(claims map[string]interface{}) (*Userinfo, error) {
+	ui := &Userinfo{}
+	if claims["sub"] == nil {
+		return ui, fmt.Errorf("claims without a sub: %v", claims)
+	}
+	uic := claims["userinfo"].(map[string]interface{})
+
+	ui.Sub = uic["sub"].(string)
+	ui.Name = uic["name"].(string)
+	ui.GivenName = uic["given_name"].(string)
+	ui.FamilyName = uic["family_name"].(string)
+	ui.Picture = uic["picture"].(string)
+	ui.Email = uic["email"].(string)
+	ui.Verified = uic["email_verified"].(bool)
+	return ui, nil
+}
+
+func RoleFromString(r string) entities.Role {
+	switch r {
+	case "admin":
+		return entities.AdminRole
+	default:
+		return entities.NoneRole
+	}
 }

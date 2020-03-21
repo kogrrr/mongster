@@ -11,6 +11,7 @@ type User struct {
 	FamilyName string `json:"family_name" bson:"family_name"`
 	GivenName  string `json:"given_name" bson:"given_name"`
 	IconURL    string `json:"icon" bson:"icon"`
+	Roles      []Role `json:"roles" bson:"roles"`
 	Token      *Token `json:"token" bson:"token"`
 }
 
@@ -20,3 +21,10 @@ type Token struct {
 	Expiry       time.Time `json:"expiry" bson:"expiry"`
 	TokenType    string    `json:"token_type" bson:"token_type"`
 }
+
+type Role string
+
+const (
+	NoneRole  Role = ""
+	AdminRole Role = "admin"
+)

@@ -10,7 +10,7 @@ ECHO := echo
 all: test build
 
 .PHONY: build
-build: clean frontend pkg/static/assets_vfsdata.go $(BINARY)
+build: clean frontend generate $(BINARY)
 
 .PHONY: clean
 clean:

@@ -2,9 +2,11 @@ package auth
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gargath/mongster/pkg/entities"
 	"golang.org/x/oauth2"
 )
@@ -79,6 +81,7 @@ func (a *Auth) CallbackHandler(w http.ResponseWriter, r *http.Request) {
 			FamilyName: userinfo.FamilyName,
 			GivenName:  userinfo.GivenName,
 			IconURL:    userinfo.Picture,
+			Roles:      []entities.Role{entities.Role("admin")}, //TODO: Don't make _everyone_ admin!
 			Token: &entities.Token{
 				AccessToken:  token.AccessToken,
 				RefreshToken: token.RefreshToken,
@@ -105,8 +108,14 @@ func (a *Auth) CallbackHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	session.Values["email"] = userinfo.Email
-	session.Values["sub"] = userinfo.Sub
+	ourT, err := a.generateToken(userinfo, []entities.Role{entities.AdminRole}) //TODO: Don't make _everyone_ admin!
+	if err != nil {
+		http.Error(w, "authentication error", http.StatusInternalServerError)
+		log.Printf("Error creating token: %v", err)
+		return
+	}
+
+	session.Values["token"] = ourT
 	session.Save(r, w)
 	http.Redirect(w, r, "/index.html", http.StatusTemporaryRedirect)
 }
@@ -119,32 +128,54 @@ func (auth *Auth) LogoutHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (auth *Auth) SelfHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	session, _ := auth.sessionStore.Get(r, auth.sessionName)
-	sub, ok := session.Values["sub"].(string)
+	t, ok := session.Values["token"].(string)
 	if !ok {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("{}"))
 		return
 	}
-	u, err := auth.b.FindUserBySub(sub)
+	token, err := jwt.Parse(t, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+		return auth.secret, nil
+	})
 	if err != nil {
-		log.Printf("error fetching user info: %v", err)
-		http.Error(w, "backend error", http.StatusInternalServerError)
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("{}"))
+		return
 	}
-	if u == nil {
-		w.WriteHeader(http.StatusNotFound)
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		re := &UserinfoResponse{}
+		u, err := UserinfoFromClaims(claims)
+		if err != nil {
+			log.Printf("error converting claims to userinfo: %v", err)
+			w.WriteHeader(http.StatusUnauthorized)
+			w.Write([]byte("{}"))
+			return
+		}
+		re.User = *u
+		roles := []entities.Role{}
+		for _, rs := range claims["roles"].([]interface{}) {
+			r := RoleFromString(rs.(string))
+			roles = append(roles, r)
+		}
+		re.Roles = roles
+		re.Token = t
+		usersJson, err := json.MarshalIndent(re, "", "\t")
+		if err != nil {
+			log.Printf("failed to marshal JSON: %v", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+		w.Write(usersJson)
+	} else {
+		w.WriteHeader(http.StatusUnauthorized)
 		w.Write([]byte("{}"))
 		return
 	}
 
-	usersJson, err := json.MarshalIndent(u, "", "\t")
-	if err != nil {
-		log.Printf("failed to marshal JSON: %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(usersJson)
 }

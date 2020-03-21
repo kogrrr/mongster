@@ -23,13 +23,10 @@ func NewAuth(c *Config, store *sessions.CookieStore, backend *backend.Backend) (
 		panic(fmt.Sprintf("crypto/rand is unavailable: Read() failed with %#v", err))
 	}
 
-	if err != nil {
-		panic(fmt.Sprintf("Error generating session key. randomHex() failed with %#v", err))
-	}
-
 	a := &Auth{}
 
 	a.sessionName = c.SessionName
+	a.secret = c.Secret
 
 	clientId := viper.GetString("clientId")
 	clientSecret := viper.GetString("clientSecret")

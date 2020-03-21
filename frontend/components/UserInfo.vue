@@ -48,8 +48,8 @@
             this.username = "anonymous";
           } else {
             this.loggedIn = true;
-            this.icon = userdata.icon;
-            this.username = userdata.name;
+            this.icon = userdata.user.picture;
+            this.username = userdata.user.name;
           }
         })
         .catch((error) => {
