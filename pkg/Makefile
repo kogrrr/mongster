@@ -8,9 +8,11 @@ clean:
 static/assets_vfsdata.go:
 	GO111MODULE=on $(GO) generate ./static/...
 
-PHONY: generate
-generate: static/assets_vfsdata.go
+api/user_api_generated.go:
 	GO111MODULE=on $(GO) generate ./api/...
+
+PHONY: generate
+generate: static/assets_vfsdata.go api/user_api_generated.go
 
 PHONY: dev
 dev:
