@@ -77,4 +77,4 @@ $(BINARY): fmt vet frontend
 dev: clean
 	make -C pkg dev
 	make -C frontend dev &
-	GO111MODULE=on $(GO) run -tags dev github.com/gargath/mongster/cmd/server
+	GO111MODULE=on $(GO) run -tags dev github.com/gargath/mongster/cmd/server --clientId $(CLIENTID) --clientSecret $(CLIENTSECRET)
