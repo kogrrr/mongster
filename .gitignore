@@ -1,5 +1,5 @@
 .env
 mongster
 
-**/**vfsdata.go
-**/***_generated.go
+**/*vfsdata.go
+**/*_generated.go
