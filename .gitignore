@@ -3,3 +3,5 @@ mongster
 
 **/*vfsdata.go
 **/*_generated.go
+
+.idea/
